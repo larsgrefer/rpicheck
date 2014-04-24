@@ -5,6 +5,10 @@
         <item name="actionBarStyle">@style/Widget.Sherlock.ActionBar.Solid</item>
     </style>
     
+    <style name="Theme.rpiCheck.Base.Light" parent="Theme.Sherlock.Light">
+        <item name="actionBarStyle">@style/Widget.Sherlock.Light.ActionBar.Solid</item>
+    </style>
+    
     <style name="Theme.rpiCheck.Dark" parent="Theme.rpiCheck.Base.Dark">
         <item name="ic_action_new">@drawable/ic_action_new_dark</item>
         <item name="ic_action_delete">@drawable/ic_action_delete_dark</item>
@@ -20,6 +24,23 @@
         <item name="ic_dialog_run">@drawable/ic_dialog_run_dark</item>
         <item name="ic_dialog_shutdown">@drawable/ic_dialog_shutdown</item>
         <item name="ic_dialog_passphrase">@drawable/ic_dialog_passphrase_dark</item>
+    </style>
+    
+    <style name="Theme.rpiCheck.Light" parent="Theme.rpiCheck.Base.Light">
+        <item name="ic_action_new">@drawable/ic_action_new_light</item>
+        <item name="ic_action_delete">@drawable/ic_action_delete_light</item>
+        <item name="ic_action_restart">@drawable/ic_action_replay_light</item>
+        <item name="ic_action_edit">@drawable/ic_action_edit_light</item>
+        <item name="ic_action_settings">@drawable/ic_action_settings_light</item>
+        <item name="ic_action_refresh">@drawable/ic_navigation_refresh</item>
+        
+        <item name="ic_settings_github">@drawable/ic_settings_github</item>
+        <item name="ic_settings_email">@drawable/ic_settings_email_light</item>
+        <item name="ic_settings_rate">@drawable/ic_settings_rate_light</item>
+        
+        <item name="ic_dialog_run">@drawable/ic_dialog_run_light</item>
+        <item name="ic_dialog_shutdown">@drawable/ic_dialog_shutdown</item>
+        <item name="ic_dialog_passphrase">@drawable/ic_dialog_passphrase_light</item>
     </style>
     
 </resources>

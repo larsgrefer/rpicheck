@@ -5,4 +5,8 @@
         <item name="android:actionBarStyle">@style/Widget.Sherlock.ActionBar.Solid</item>
     </style>
     
+    <style name="Theme.rpiCheck.Base.Light" parent="Theme.Sherlock.Light">
+        <item name="android:actionBarStyle">@style/Widget.Sherlock.Light.ActionBar.Solid</item>
+    </style>
+    
 </resources>
