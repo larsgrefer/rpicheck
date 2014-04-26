@@ -18,6 +18,11 @@
             android:key="pref_frequency_unit"
             android:summary="@string/pref_frequency_unit_summary"
             android:title="@string/pref_frequency_unit_title" />
+        <ListPreference 
+            android:key="pref_theme"
+            android:title="@string/pref_theme_title"
+            android:entryValues="@array/pref_theme_themes"
+            android:entries="@array/pref_theme_names"/>
     </PreferenceCategory>
     <PreferenceCategory
         android:key="pref_query_settings"

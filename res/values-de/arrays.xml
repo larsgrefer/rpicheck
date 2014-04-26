@@ -10,5 +10,9 @@
         <item>Private key</item>
         <item>Private key m. Passwort</item>
     </string-array>
-
+	<string-array name="pref_theme_names">
+        <item>Dunkel</item>
+        <item>Hell</item>
+    </string-array>
+    
 </resources>

@@ -28,5 +28,12 @@
         <item>private key</item>
         <item>private key w. password</item>
     </string-array>
-
+    <integer-array name="pref_theme_themes">
+        <item>@style/Theme.rpiCheck.Dark</item>
+        <item>@style/Theme.rpiCheck.Light</item>
+    </integer-array>
+    <string-array name="pref_theme_names">
+        <item>Dark</item>
+        <item>Light</item>
+    </string-array>
 </resources>

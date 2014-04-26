@@ -160,7 +160,8 @@
     <string name="command_context_run">Run</string>
     <string name="run_cmd_dialog_title">Running %1$s</string>
 
-    
     <string name="hint_pulltorefresh">Just a hint: You can also refresh by pulling the screen to the bottom!</string>
+    
+    <string name="pref_theme_title">Theme</string>
 
 </resources>
