@@ -18,17 +18,17 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.NavUtils;
 import android.support.v4.widget.CursorAdapter;
+import android.support.v7.app.ActionBarActivity;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 import com.google.common.base.Strings;
 
 import de.eidottermihi.rpicheck.R;
@@ -41,7 +41,7 @@ import de.eidottermihi.rpicheck.fragment.PassphraseDialog;
 import de.eidottermihi.rpicheck.fragment.PassphraseDialog.PassphraseDialogListener;
 import de.eidottermihi.rpicheck.fragment.RunCommandDialog;
 
-public class CustomCommandActivity extends SherlockFragmentActivity implements
+public class CustomCommandActivity extends ActionBarActivity implements
 		OnItemClickListener, PassphraseDialogListener,
 		PlaceholdersDialogListener {
 	private static final Logger LOGGER = LoggerFactory
@@ -117,7 +117,7 @@ public class CustomCommandActivity extends SherlockFragmentActivity implements
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getSupportMenuInflater().inflate(R.menu.activity_commands, menu);
+		getMenuInflater().inflate(R.menu.activity_commands, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
 

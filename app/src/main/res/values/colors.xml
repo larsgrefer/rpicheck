@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="material_pink_500">#e91e63</color>
+    <color name="material_pink_700">#c2185b</color>
+    <color name="material_green_A200">#69f0ae</color>
+    <color name="material_green_A400">#00e676</color>
+</resources>

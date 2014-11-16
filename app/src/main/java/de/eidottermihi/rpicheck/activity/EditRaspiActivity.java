@@ -3,11 +3,15 @@ package de.eidottermihi.rpicheck.activity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.NavUtils;
+import android.support.v7.app.ActionBarActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -20,19 +24,18 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 import com.google.common.base.Strings;
+/*
 import com.lamerman.FileDialog;
 import com.lamerman.SelectionMode;
+*/
 
 import de.eidottermihi.rpicheck.R;
 import de.eidottermihi.rpicheck.activity.helper.Validation;
 import de.eidottermihi.rpicheck.db.DeviceDbHelper;
 import de.eidottermihi.rpicheck.db.RaspberryDeviceBean;
 
-public class EditRaspiActivity extends SherlockActivity implements
+public class EditRaspiActivity extends ActionBarActivity implements
 		OnItemSelectedListener {
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(EditRaspiActivity.class);
@@ -134,7 +137,7 @@ public class EditRaspiActivity extends SherlockActivity implements
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getSupportMenuInflater().inflate(R.menu.activity_raspi_edit, menu);
+		getMenuInflater().inflate(R.menu.activity_raspi_edit, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
 
@@ -325,7 +328,7 @@ public class EditRaspiActivity extends SherlockActivity implements
 		}
 	}
 
-	private void openKeyfile() {
+	private void openKeyfile() {/*
 		final Intent intent = new Intent(getBaseContext(), FileDialog.class);
 		intent.putExtra(FileDialog.START_PATH, Environment
 				.getExternalStorageDirectory().getPath());
@@ -338,6 +341,7 @@ public class EditRaspiActivity extends SherlockActivity implements
 		// alternatively you can set file filter
 		// intent.putExtra(FileDialog.FORMAT_FILTER, new String[] { "png" });
 		this.startActivityForResult(intent, NewRaspiAuthActivity.REQUEST_LOAD);
+		*/
 	}
 
 	@Override
@@ -357,6 +361,7 @@ public class EditRaspiActivity extends SherlockActivity implements
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == Activity.RESULT_OK) {
 			if (requestCode == NewRaspiAuthActivity.REQUEST_LOAD) {
+				/*
 				final String filePath = data
 						.getStringExtra(FileDialog.RESULT_PATH);
 				LOGGER.debug("Path of selected keyfile: {}", filePath);
@@ -365,6 +370,7 @@ public class EditRaspiActivity extends SherlockActivity implements
 				String fileName = NewRaspiAuthActivity
 						.getFilenameFromPath(filePath);
 				buttonKeyfile.setText(fileName);
+				*/
 			}
 		} else if (resultCode == Activity.RESULT_CANCELED) {
 			LOGGER.warn("No file selected...");

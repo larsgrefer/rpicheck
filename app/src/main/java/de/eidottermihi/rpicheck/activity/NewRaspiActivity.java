@@ -6,17 +6,16 @@ import org.slf4j.LoggerFactory;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.support.v7.app.ActionBarActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 
 import de.eidottermihi.rpicheck.R;
 import de.eidottermihi.rpicheck.activity.helper.Validation;
 
-public class NewRaspiActivity extends SherlockActivity {
+public class NewRaspiActivity extends ActionBarActivity {
 	public static final String PI_HOST = "PI_HOST";
 	public static final String PI_NAME = "PI_NAME";
 	public static final String PI_USER = "PI_USER";
@@ -52,7 +51,7 @@ public class NewRaspiActivity extends SherlockActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getSupportMenuInflater().inflate(R.menu.activity_raspi_new, menu);
+		getMenuInflater().inflate(R.menu.activity_raspi_new, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
 

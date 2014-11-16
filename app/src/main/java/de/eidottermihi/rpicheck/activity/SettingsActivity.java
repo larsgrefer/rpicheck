@@ -14,12 +14,11 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
+import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NavUtils;
+import android.view.MenuItem;
 import android.widget.Toast;
-
-import com.actionbarsherlock.app.SherlockPreferenceActivity;
-import com.actionbarsherlock.view.MenuItem;
 
 import de.eidottermihi.rpicheck.R;
 import de.eidottermihi.rpicheck.activity.helper.Constants;
@@ -31,7 +30,7 @@ import de.eidottermihi.rpicheck.activity.helper.LoggingHelper;
  * @author Michael
  * 
  */
-public class SettingsActivity extends SherlockPreferenceActivity implements
+public class SettingsActivity extends PreferenceActivity implements
 		OnSharedPreferenceChangeListener, OnPreferenceClickListener {
 
 	private static final String LOG_LOCATION = Environment
@@ -63,7 +62,6 @@ public class SettingsActivity extends SherlockPreferenceActivity implements
 		// init summary texts to reflect users choice
 		this.initSummaries();
 		// ancestral navigation
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 
 	@SuppressWarnings("deprecation")

@@ -5,12 +5,12 @@ import org.slf4j.LoggerFactory;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 import com.google.common.base.Strings;
 
 import de.eidottermihi.rpicheck.R;
@@ -18,7 +18,7 @@ import de.eidottermihi.rpicheck.activity.helper.Validation;
 import de.eidottermihi.rpicheck.db.CommandBean;
 import de.eidottermihi.rpicheck.db.DeviceDbHelper;
 
-public class NewCommandActivity extends SherlockActivity {
+public class NewCommandActivity extends ActionBarActivity {
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(NewCommandActivity.class);
 
@@ -75,7 +75,7 @@ public class NewCommandActivity extends SherlockActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getSupportMenuInflater().inflate(R.menu.activity_command_new, menu);
+		getMenuInflater().inflate(R.menu.activity_command_new, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
 
