@@ -45,3 +45,11 @@ tmp/**/*
 
 # IDEA
 *.iml
+
+#New Entrys generated from Android Studio
+.gradle
+/local.properties
+/.idea/workspace.xml
+/.idea/libraries
+.DS_Store
+/build
