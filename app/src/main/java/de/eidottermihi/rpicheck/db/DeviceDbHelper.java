@@ -35,7 +35,7 @@ public class DeviceDbHelper extends SQLiteOpenHelper {
 	private static final String COLUMN_MODIFIED_AT = "modified_at";
 	private static final String COLUMN_SUDOPW = "sudo_passwd";
 	private static final String COLUMN_AUTH_METHOD = "auth_method";
-	private static final String COLUMN_KEYFILE_PATH = "keyfile_path";
+	private static final String COLUMN_KEYFILE_CONTENT = "keyfile_path";
 	private static final String COLUMN_KEYFILE_PASS = "keyfile_pass";
 	private static final String COLUMN_SERIAL = "serial";
 	private static final String COLUMN_QUERY_TIME = "time";
@@ -64,7 +64,7 @@ public class DeviceDbHelper extends SQLiteOpenHelper {
 			+ COLUMN_SUDOPW + " TEXT, " + COLUMN_SSHPORT + " INTEGER, "
 			+ COLUMN_CREATED_AT + " INTEGER, " + COLUMN_MODIFIED_AT
 			+ " INTEGER, " + COLUMN_SERIAL + " TEXT, " + COLUMN_AUTH_METHOD
-			+ " TEXT NOT NULL, " + COLUMN_KEYFILE_PATH + " TEXT, "
+			+ " TEXT NOT NULL, " + COLUMN_KEYFILE_CONTENT + " TEXT, "
 			+ COLUMN_KEYFILE_PASS + " TEXT)";
 
 	private static final String QUERY_TABLE_CREATE = "CREATE TABLE "
@@ -153,7 +153,7 @@ public class DeviceDbHelper extends SQLiteOpenHelper {
 				+ COLUMN_AUTH_METHOD + " TEXT NOT NULL DEFAULT '"
 				+ NewRaspiAuthActivity.SPINNER_AUTH_METHODS[0] + "'");
 		db.execSQL("ALTER TABLE " + DEVICES_TABLE_NAME + " ADD COLUMN "
-				+ COLUMN_KEYFILE_PATH + " TEXT");
+				+ COLUMN_KEYFILE_CONTENT + " TEXT");
 		db.execSQL("ALTER TABLE " + DEVICES_TABLE_NAME + " ADD COLUMN "
 				+ COLUMN_KEYFILE_PASS + " TEXT");
 	}
@@ -217,11 +217,11 @@ public class DeviceDbHelper extends SQLiteOpenHelper {
 		} else if (authMethod
 				.equals(NewRaspiAuthActivity.SPINNER_AUTH_METHODS[1])) {
 			// insert only location of keyfile
-			values.put(COLUMN_KEYFILE_PATH, keyFilePath);
+			values.put(COLUMN_KEYFILE_CONTENT, keyFilePath);
 		} else if (authMethod
 				.equals(NewRaspiAuthActivity.SPINNER_AUTH_METHODS[2])) {
 			// insert keyfile path and password
-			values.put(COLUMN_KEYFILE_PATH, keyFilePath);
+			values.put(COLUMN_KEYFILE_CONTENT, keyFilePath);
 			values.put(COLUMN_KEYFILE_PASS, keyFilePass);
 		}
 
@@ -249,7 +249,7 @@ public class DeviceDbHelper extends SQLiteOpenHelper {
 				COLUMN_HOST, COLUMN_USER, COLUMN_PASSWD, COLUMN_SSHPORT,
 				COLUMN_CREATED_AT, COLUMN_MODIFIED_AT, COLUMN_SERIAL,
 				COLUMN_DESCRIPTION, COLUMN_NAME, COLUMN_SUDOPW,
-				COLUMN_AUTH_METHOD, COLUMN_KEYFILE_PATH, COLUMN_KEYFILE_PASS },
+				COLUMN_AUTH_METHOD, COLUMN_KEYFILE_CONTENT, COLUMN_KEYFILE_PASS },
 				COLUMN_ID + "=" + id, null, null, null, null, null);
 		if (cursor.moveToFirst()) {
 			cursor.moveToFirst();
@@ -265,8 +265,8 @@ public class DeviceDbHelper extends SQLiteOpenHelper {
 			bean.setName(cursor.getString(9));
 			bean.setSudoPass(cursor.getString(10));
 			bean.setAuthMethod(cursor.getString(11));
-			bean.setKeyfilePath(cursor.getString(12));
-			bean.setKeyfilePass(cursor.getString(13));
+			bean.setKeyFileContent(cursor.getString(12));
+			bean.setKeyFilePass(cursor.getString(13));
 			cursor.close();
 			db.close();
 			return bean;
@@ -317,8 +317,8 @@ public class DeviceDbHelper extends SQLiteOpenHelper {
 		values.put(COLUMN_SERIAL, device.getSerial());
 		values.put(COLUMN_SUDOPW, device.getSudoPass());
 		values.put(COLUMN_AUTH_METHOD, device.getAuthMethod());
-		values.put(COLUMN_KEYFILE_PATH, device.getKeyfilePath());
-		values.put(COLUMN_KEYFILE_PASS, device.getKeyfilePass());
+		values.put(COLUMN_KEYFILE_CONTENT, device.getKeyFileContent());
+		values.put(COLUMN_KEYFILE_PASS, device.getKeyFilePass());
 
 		// modified: current timestamp
 		Long timestamp = Calendar.getInstance().getTimeInMillis();

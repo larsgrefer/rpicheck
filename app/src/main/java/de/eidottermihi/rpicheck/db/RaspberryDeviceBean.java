@@ -5,6 +5,9 @@ import java.util.Date;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import com.google.common.base.Objects;
+
 import de.eidottermihi.rpicheck.beans.QueryBean;
 
 public class RaspberryDeviceBean implements Serializable, Parcelable {
@@ -22,8 +25,8 @@ public class RaspberryDeviceBean implements Serializable, Parcelable {
 	private Date modifiedAt;
 	private String sudoPass;
 	private String authMethod;
-	private String keyfilePath;
-	private String keyfilePass;
+	private String keyFileContent;
+	private String keyFilePass;
 
 	private int spinnerPosition;
 	private QueryBean lastQueryData;
@@ -42,8 +45,8 @@ public class RaspberryDeviceBean implements Serializable, Parcelable {
 		dest.writeSerializable(modifiedAt);
 		dest.writeString(sudoPass);
 		dest.writeString(authMethod);
-		dest.writeString(keyfilePath);
-		dest.writeString(keyfilePass);
+		dest.writeString(keyFileContent);
+		dest.writeString(keyFilePass);
 		dest.writeInt(spinnerPosition);
 		dest.writeSerializable(lastQueryData);
 	}
@@ -74,8 +77,8 @@ public class RaspberryDeviceBean implements Serializable, Parcelable {
 		modifiedAt = (Date) source.readSerializable();
 		sudoPass = source.readString();
 		authMethod = source.readString();
-		keyfilePath = source.readString();
-		keyfilePass = source.readString();
+		keyFileContent = source.readString();
+		keyFilePass = source.readString();
 		spinnerPosition = source.readInt();
 		lastQueryData = (QueryBean) source.readSerializable();
 	}
@@ -200,32 +203,43 @@ public class RaspberryDeviceBean implements Serializable, Parcelable {
 		this.authMethod = authMethod;
 	}
 
-	public String getKeyfilePath() {
-		return keyfilePath;
+	public String getKeyFileContent() {
+		return keyFileContent;
 	}
 
-	public void setKeyfilePath(String keyfilePath) {
-		this.keyfilePath = keyfilePath;
+	public void setKeyFileContent(String keyFileContent) {
+		this.keyFileContent = keyFileContent;
 	}
 
-	public String getKeyfilePass() {
-		return keyfilePass;
+	public String getKeyFilePass() {
+		return keyFilePass;
 	}
 
-	public void setKeyfilePass(String keyfilePass) {
-		this.keyfilePass = keyfilePass;
+	public void setKeyFilePass(String keyFilePass) {
+		this.keyFilePass = keyFilePass;
 	}
 
 	@Override
 	public String toString() {
-		return "RaspberryDeviceBean [id=" + id + ", createdAt=" + createdAt
-				+ ", modifiedAt=" + modifiedAt + ", name=" + name + ", host="
-				+ host + ", user=" + user + ", port=" + port + ", description="
-				+ description + ", serial=" + serial + ", sudoPass=" + sudoPass
-				+ ", authMethod=" + authMethod + ", pass=" + pass
-				+ ", keyfilePath=" + keyfilePath + ", keyfilePass="
-				+ keyfilePass + ", spinnerPosition=" + spinnerPosition
-				+ ", lastQueryData=" + lastQueryData + "]";
+		return Objects.toStringHelper(this)
+					   .add("layoutId", id)
+					   .add("createdAt", createdAt)
+					   .add("modifiedAt", modifiedAt)
+					   .add("name", name)
+					   .add("host", host)
+					   .add("user", user)
+					   .add("pass", pass)
+					   .add("port", port)
+					   .add("description", description)
+					   .add("serial", serial)
+					   .add("sudoPass", sudoPass)
+					   .add("authMethod", authMethod)
+					   .add("keyFileContent", keyFileContent)
+					   .add("keyFilePass", keyFilePass)
+					   .add("spinnerPosition", spinnerPosition)
+					   .add("lastQueryData", lastQueryData)
+					   .toString();
+
 	}
 
 }

@@ -244,7 +244,7 @@ public class CustomCommandActivity extends ActionBarActivity implements
 		if (networkInfo != null && networkInfo.isConnected()) {
 			if (currentDevice.getAuthMethod().equals(
 					NewRaspiAuthActivity.SPINNER_AUTH_METHODS[2])
-					&& Strings.isNullOrEmpty(currentDevice.getKeyfilePass())) {
+					&& Strings.isNullOrEmpty(currentDevice.getKeyFilePass())) {
 				// must ask for key passphrase first
 				LOGGER.debug("Asking for key passphrase.");
 				// dirty hack, saving commandId as "dialog type"
@@ -258,7 +258,7 @@ public class CustomCommandActivity extends ActionBarActivity implements
 						.show(getSupportFragmentManager(), "passphrase");
 			} else {
 				LOGGER.debug("Opening command dialog.");
-				openCommandDialog(commandId, currentDevice.getKeyfilePass());
+				openCommandDialog(commandId, currentDevice.getKeyFilePass());
 			}
 		} else {
 			Toast.makeText(this, R.string.no_connection, Toast.LENGTH_SHORT)
@@ -326,7 +326,7 @@ public class CustomCommandActivity extends ActionBarActivity implements
 		LOGGER.debug("Key passphrase entered.");
 		if (savePassphrase) {
 			LOGGER.debug("Saving passphrase..");
-			currentDevice.setKeyfilePass(passphrase);
+			currentDevice.setKeyFilePass(passphrase);
 			currentDevice.setModifiedAt(new Date());
 			new Thread() {
 				@Override

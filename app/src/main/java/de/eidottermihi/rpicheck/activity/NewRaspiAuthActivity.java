@@ -8,9 +8,9 @@ import org.slf4j.LoggerFactory;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,11 +26,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.common.base.Strings;
-/*
-import com.lamerman.FileDialog;
-import com.lamerman.SelectionMode;
-*/
+
 import de.eidottermihi.rpicheck.R;
+import de.eidottermihi.rpicheck.activity.helper.KeyFileHelper;
 import de.eidottermihi.rpicheck.activity.helper.Validation;
 import de.eidottermihi.rpicheck.db.DeviceDbHelper;
 
@@ -61,7 +59,7 @@ public class NewRaspiAuthActivity extends ActionBarActivity implements
 	private EditText editTextSudoPw;
 	private CheckBox checkboxAskPassphrase;
 
-	private String keyfilePath;
+	private String keyFileContent;
 
 	private String host;
 	private String desc;
@@ -169,19 +167,8 @@ public class NewRaspiAuthActivity extends ActionBarActivity implements
 		}
 	}
 
-	private void openKeyfile() {/*
-		final Intent intent = new Intent(getBaseContext(), FileDialog.class);
-		intent.putExtra(FileDialog.START_PATH, Environment
-				.getExternalStorageDirectory().getPath());
-
-		// can user select directories or not
-		intent.putExtra(FileDialog.CAN_SELECT_DIR, false);
-		// user can only open existing files
-		intent.putExtra(FileDialog.SELECTION_MODE, SelectionMode.MODE_OPEN);
-
-		// alternatively you can set file filter
-		// intent.putExtra(FileDialog.FORMAT_FILTER, new String[] { "png" });
-		this.startActivityForResult(intent, REQUEST_LOAD);*/
+	private void openKeyfile() {
+		KeyFileHelper.startOpenKeyFileIntent(this);
 	}
 
 	private void saveRaspi() {
@@ -209,9 +196,9 @@ public class NewRaspiAuthActivity extends ActionBarActivity implements
 				}
 			} else if (selectedAuthMethod.equals(SPINNER_AUTH_METHODS[1])) {
 				// keyfile must be selected
-				if (keyfilePath != null && new File(keyfilePath).exists()) {
+				if (keyFileContent != null && new File(keyFileContent).exists()) {
 					addRaspiToDb(name, host, user, selectedAuthMethod, sshPort,
-							desc, sudoPass, null, null, keyfilePath);
+							desc, sudoPass, null, null, keyFileContent);
 					saveSuccessful = true;
 				} else {
 					buttonKeyfile
@@ -219,11 +206,11 @@ public class NewRaspiAuthActivity extends ActionBarActivity implements
 				}
 			} else if (selectedAuthMethod.equals(SPINNER_AUTH_METHODS[2])) {
 				// keyfile must be selected
-				if (keyfilePath != null && new File(keyfilePath).exists()) {
+				if (keyFileContent != null && new File(keyFileContent).exists()) {
 					if (checkboxAskPassphrase.isChecked()) {
 						addRaspiToDb(name, host, user, selectedAuthMethod,
 								sshPort, desc, sudoPass, null, null,
-								keyfilePath);
+											keyFileContent);
 						saveSuccessful = true;
 					} else {
 						// password must be set
@@ -235,7 +222,7 @@ public class NewRaspiAuthActivity extends ActionBarActivity implements
 									.getText().toString().trim();
 							addRaspiToDb(name, host, user, selectedAuthMethod,
 									sshPort, desc, sudoPass, null, keyfilePass,
-									keyfilePath);
+												keyFileContent);
 							saveSuccessful = true;
 						}
 					}
@@ -256,7 +243,7 @@ public class NewRaspiAuthActivity extends ActionBarActivity implements
 
 	private void addRaspiToDb(final String name, final String host, final String user,
 			final String authMethod, String sshPort, final String description,
-			String sudoPass, final String sshPass, final String keyPass, final String keyPath) {
+			String sudoPass, final String sshPass, final String keyPass, final String keyFileContent) {
 		// if sshPort is empty, use default port (22)
 		if (Strings.isNullOrEmpty(sshPort)) {
 			sshPort = getText(R.string.default_ssh_port).toString();
@@ -269,7 +256,7 @@ public class NewRaspiAuthActivity extends ActionBarActivity implements
 			@Override
 			public void run() {
 				deviceDb.create(name, host, user, sshPass, Integer.parseInt(port),
-						description, pass, authMethod, keyPath, keyPass);
+						description, pass, authMethod, keyFileContent, keyPass);
 			}
 		}.start();
 	}
@@ -311,19 +298,15 @@ public class NewRaspiAuthActivity extends ActionBarActivity implements
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		Log.d(this.getLocalClassName(), "onActivityResult");
+		Log.d(this.getLocalClassName(), "requestCode: " + requestCode);
 		if (resultCode == Activity.RESULT_OK) {
-			if (requestCode == REQUEST_LOAD) {/*
-				final String filePath = data
-						.getStringExtra(FileDialog.RESULT_PATH);
-				LOGGER.debug("Path of selected keyfile: {}", filePath);
-				this.keyfilePath = filePath;
-				// set text to filename, not full path
-				String fileName = getFilenameFromPath(filePath);
-				buttonKeyfile.setText(fileName);
-				buttonKeyfile.setError(null);*/
+			Log.d(this.getLocalClassName(), "RESULT_OK");
+			if (requestCode == KeyFileHelper.REQUEST_OPEN_KEY_FILE) {
+				keyFileContent = KeyFileHelper.getKeyFileContentFromActivityResult(this, requestCode, resultCode, data);
 			}
 		} else if (resultCode == Activity.RESULT_CANCELED) {
-			LOGGER.warn("No keyfile selected...");
+			Log.d(this.getLocalClassName(), "RESULT_CANCELED");
 		}
 	}
 

@@ -1,12 +1,8 @@
 package de.eidottermihi.rpicheck.ssh;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import com.google.common.base.CharMatcher;
+import com.google.common.base.Splitter;
+import com.google.common.base.Strings;
 
 import net.schmizz.sshj.AndroidConfig;
 import net.schmizz.sshj.SSHClient;
@@ -17,16 +13,21 @@ import net.schmizz.sshj.connection.channel.direct.Session.Command;
 import net.schmizz.sshj.transport.TransportException;
 import net.schmizz.sshj.userauth.UserAuthException;
 import net.schmizz.sshj.userauth.keyprovider.KeyProvider;
+import net.schmizz.sshj.userauth.password.PasswordFinder;
+import net.schmizz.sshj.userauth.password.Resource;
 import net.schmizz.sshj.xfer.FileSystemFile;
 import net.schmizz.sshj.xfer.scp.SCPFileTransfer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.CharMatcher;
-import com.google.common.base.Joiner;
-import com.google.common.base.Splitter;
-import com.google.common.base.Strings;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import de.eidottermihi.rpicheck.beans.DiskUsageBean;
 import de.eidottermihi.rpicheck.beans.NetworkInterfaceInformation;
@@ -96,8 +97,6 @@ public class RaspiQuery {
 	 *            hostname or ip adress of a running raspberry pi
 	 * @param user
 	 *            username for ssh login
-	 * @param pass
-	 *            password for ssh login
 	 * @param port
 	 *            ssh port to use (if null, default will be used)
 	 */
@@ -1204,13 +1203,17 @@ public class RaspiQuery {
 	 *             - if connection, authentication or transport fails
 	 */
 	public final void connect(String password) throws RaspiQueryException {
+
 		LOGGER.info("Connecting to host: {} on port {}.", hostname, port);
 		client = new SSHClient(new AndroidConfig());
+
 		LOGGER.info("Using no host key verification.");
 		client.addHostKeyVerifier(new NoHostKeyVerifierImplementation());
+
 		try {
 			client.connect(hostname, port);
 		} catch (IOException e) {
+			e.printStackTrace();
 			throw RaspiQueryException
 					.createConnectionFailure(hostname, port, e);
 		}
@@ -1227,30 +1230,30 @@ public class RaspiQuery {
 	/**
 	 * Establishes a ssh connection with public key authentification.
 	 * 
-	 * @param keyfilePath
-	 *            path to the private key file in PKCS11/OpenSSH format
+	 * @param keyFileContent
+	 *            content of the private key file in PKCS11/OpenSSH format
 	 * @throws RaspiQueryException
 	 */
-	public final void connectWithPubKeyAuth(final String keyfilePath)
-			throws RaspiQueryException {
+	public final void connectWithPubKeyAuth(final String keyFileContent) throws RaspiQueryException {
+
 		LOGGER.info("Connecting to host: {} on port {}.", hostname, port);
 		client = new SSHClient(new AndroidConfig());
+
 		LOGGER.info("Using no host key verification.");
 		client.addHostKeyVerifier(new NoHostKeyVerifierImplementation());
+
 		LOGGER.info("Using private/public key authentification.");
 		try {
 			client.connect(hostname, port);
 		} catch (IOException e) {
-			throw RaspiQueryException
-					.createConnectionFailure(hostname, port, e);
+			throw RaspiQueryException.createConnectionFailure(hostname, port, e);
 		}
 		try {
-			final KeyProvider keyProvider = client.loadKeys(keyfilePath);
+			final KeyProvider keyProvider = client.loadKeys(keyFileContent, null, null);
 			client.authPublickey(username, keyProvider);
 		} catch (UserAuthException e) {
 			LOGGER.info("Authentification failed.", e);
-			throw RaspiQueryException.createAuthenticationFailure(hostname,
-					username, e);
+			throw RaspiQueryException.createAuthenticationFailure(hostname, username, e);
 		} catch (TransportException e) {
 			throw RaspiQueryException.createTransportFailure(hostname, e);
 		} catch (IOException e) {
@@ -1261,12 +1264,11 @@ public class RaspiQuery {
 	/**
 	 * Establishes a ssh connection with public key authentification.
 	 * 
-	 * @param path
-	 *            path to the private key file in PKCS11/OpenSSH format
+	 * @param keyFileContent
+	 *            content of the private key file in PKCS11/OpenSSH format
 	 * @throws RaspiQueryException
 	 */
-	public void connectWithPubKeyAuthAndPassphrase(String path,
-			String privateKeyPass) throws RaspiQueryException {
+	public void connectWithPubKeyAuthAndPassphrase(String keyFileContent, final String keyFilePass) throws RaspiQueryException {
 		LOGGER.info("Connecting to host: {} on port {}.", hostname, port);
 		client = new SSHClient(new AndroidConfig());
 		LOGGER.info("Using no host key verification.");
@@ -1275,12 +1277,21 @@ public class RaspiQuery {
 		try {
 			client.connect(hostname, port);
 		} catch (IOException e) {
-			throw RaspiQueryException
-					.createConnectionFailure(hostname, port, e);
+			throw RaspiQueryException.createConnectionFailure(hostname, port, e);
 		}
 		try {
-			final KeyProvider keyProvider = client.loadKeys(path,
-					privateKeyPass.toCharArray());
+			final KeyProvider keyProvider = client.loadKeys(keyFileContent, null,
+																   new PasswordFinder() {
+																	   @Override
+																	   public char[] reqPassword(Resource<?> resource) {
+																			   return keyFilePass.toCharArray();
+																	   }
+
+																	   @Override
+																	   public boolean shouldRetry(Resource<?> resource) {
+																		   return false;
+																	   }
+																   });
 			client.authPublickey(username, keyProvider);
 		} catch (UserAuthException e) {
 			LOGGER.info("Authentification failed.", e);

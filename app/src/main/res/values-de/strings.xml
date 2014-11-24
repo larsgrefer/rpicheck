@@ -172,5 +172,8 @@
     <string name="placeholders_button_ok">OK</string>
     <string name="placeholder_hint_text">Du kann Platzhalter wie z.B. \'${my_secret}\' verwenden. Diese werden erst durch deine Eingabe beim Ausführen des Kommandos ersetzt.</string>
     <string name="placeholder_hint">Tipp:</string>
-    
+    <string name="dialog_installFilePicker_title">Datei Manager installieren?</string>
+    <string name="dialog_installFilePicker_message">Es wurde kein Datei-Manager zum suchen der Datei gefunden, möchten sie einen installieren?</string>
+    <string name="toast_error_openKeyFile">Fehler beim öffnen oder lesen der KeyFile</string>
+
 </resources>

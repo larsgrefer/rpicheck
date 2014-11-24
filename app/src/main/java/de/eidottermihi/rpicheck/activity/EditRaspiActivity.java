@@ -3,11 +3,9 @@ package de.eidottermihi.rpicheck.activity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -31,6 +29,7 @@ import com.lamerman.SelectionMode;
 */
 
 import de.eidottermihi.rpicheck.R;
+import de.eidottermihi.rpicheck.activity.helper.KeyFileHelper;
 import de.eidottermihi.rpicheck.activity.helper.Validation;
 import de.eidottermihi.rpicheck.db.DeviceDbHelper;
 import de.eidottermihi.rpicheck.db.RaspberryDeviceBean;
@@ -202,7 +201,7 @@ public class EditRaspiActivity extends ActionBarActivity implements
 				authMethod, editTextName, editTextHost, editTextUser,
 				editTextPass, editTextSshPortOpt, editTextSudoPass,
 				editTextKeyfilePass, buttonKeyfile,
-				checkboxAskPassphrase.isChecked(), deviceBean.getKeyfilePath());
+				checkboxAskPassphrase.isChecked(), deviceBean.getKeyFileContent());
 		if (validationSuccessful) {
 			// getting credentials from textfields
 			final String name = editTextName.getText().toString().trim();
@@ -221,13 +220,13 @@ public class EditRaspiActivity extends ActionBarActivity implements
 						NewRaspiAuthActivity.SPINNER_AUTH_METHODS[authMethod],
 						null, null);
 			} else if (authMethod == 1) {
-				final String keyfilePath = deviceBean.getKeyfilePath();
+				final String keyfilePath = deviceBean.getKeyFileContent();
 				updateRaspiInDb(name, host, user, null, sshPort, description,
 						sudoPass,
 						NewRaspiAuthActivity.SPINNER_AUTH_METHODS[authMethod],
 						keyfilePath, null);
 			} else if (authMethod == 2) {
-				final String keyfilePath = deviceBean.getKeyfilePath();
+				final String keyfilePath = deviceBean.getKeyFileContent();
 				if (checkboxAskPassphrase.isChecked()) {
 					updateRaspiInDb(
 							name,
@@ -277,8 +276,8 @@ public class EditRaspiActivity extends ActionBarActivity implements
 		deviceBean.setDescription(description);
 		deviceBean.setSudoPass(sudoPass);
 		deviceBean.setAuthMethod(authMethod);
-		deviceBean.setKeyfilePath(keyfilePath);
-		deviceBean.setKeyfilePass(keyfilePass);
+		deviceBean.setKeyFileContent(keyfilePath);
+		deviceBean.setKeyFilePass(keyfilePass);
 		new Thread() {
 			@Override
 			public void run() {
@@ -306,10 +305,10 @@ public class EditRaspiActivity extends ActionBarActivity implements
 			relLayKeyfile.setVisibility(View.VISIBLE);
 			initButtonKeyfile();
 			checkboxAskPassphrase.setVisibility(View.VISIBLE);
-			if (deviceBean.getKeyfilePass() != null) {
+			if (deviceBean.getKeyFilePass() != null) {
 				relLayKeyPassphrase.setVisibility(View.VISIBLE);
 				checkboxAskPassphrase.setChecked(false);
-				editTextKeyfilePass.setText(deviceBean.getKeyfilePass());
+				editTextKeyfilePass.setText(deviceBean.getKeyFilePass());
 			} else if (!Strings.isNullOrEmpty(editTextKeyfilePass.getText()
 					.toString())) {
 				relLayKeyPassphrase.setVisibility(View.VISIBLE);
@@ -322,26 +321,14 @@ public class EditRaspiActivity extends ActionBarActivity implements
 	}
 
 	private void initButtonKeyfile() {
-		if (deviceBean.getKeyfilePath() != null) {
+		if (deviceBean.getKeyFileContent() != null) {
 			buttonKeyfile.setText(NewRaspiAuthActivity
-					.getFilenameFromPath(deviceBean.getKeyfilePath()));
+					.getFilenameFromPath(deviceBean.getKeyFileContent()));
 		}
 	}
 
-	private void openKeyfile() {/*
-		final Intent intent = new Intent(getBaseContext(), FileDialog.class);
-		intent.putExtra(FileDialog.START_PATH, Environment
-				.getExternalStorageDirectory().getPath());
-
-		// can user select directories or not
-		intent.putExtra(FileDialog.CAN_SELECT_DIR, false);
-		// user can only open existing files
-		intent.putExtra(FileDialog.SELECTION_MODE, SelectionMode.MODE_OPEN);
-
-		// alternatively you can set file filter
-		// intent.putExtra(FileDialog.FORMAT_FILTER, new String[] { "png" });
-		this.startActivityForResult(intent, NewRaspiAuthActivity.REQUEST_LOAD);
-		*/
+	private void openKeyfile() {
+		KeyFileHelper.startOpenKeyFileIntent(this);
 	}
 
 	@Override
@@ -360,12 +347,12 @@ public class EditRaspiActivity extends ActionBarActivity implements
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == Activity.RESULT_OK) {
-			if (requestCode == NewRaspiAuthActivity.REQUEST_LOAD) {
+			if (requestCode == KeyFileHelper.REQUEST_OPEN_KEY_FILE) {
 				/*
 				final String filePath = data
 						.getStringExtra(FileDialog.RESULT_PATH);
 				LOGGER.debug("Path of selected keyfile: {}", filePath);
-				deviceBean.setKeyfilePath(filePath);
+				deviceBean.setKeyFileContent(filePath);
 				// set text to filename, not full path
 				String fileName = NewRaspiAuthActivity
 						.getFilenameFromPath(filePath);

@@ -11,6 +11,9 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.larsgrefer.android.library.injection.annotation.XmlLayout;
+import de.larsgrefer.android.library.injection.annotation.XmlView;
+import de.larsgrefer.android.library.ui.InjectionActionBarActivity;
 import sheetrock.panda.changelog.ChangeLog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -26,15 +29,12 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.SparseArray;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ProgressBar;
-import android.widget.ScrollView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -67,8 +67,9 @@ import de.eidottermihi.rpicheck.fragment.RebootDialogFragment.ShutdownDialogList
 import de.eidottermihi.rpicheck.ssh.RaspiQuery;
 import de.eidottermihi.rpicheck.ssh.RaspiQueryException;
 
-public class MainActivity extends ActionBarActivity implements
-															SwipeRefreshLayout.OnRefreshListener,
+@XmlLayout(id = R.layout.activity_main, rClass = R.class)
+public class MainActivity extends InjectionActionBarActivity implements
+
 		ActionBar.OnNavigationListener,
 		ShutdownDialogListener, PassphraseDialogListener {
 	private static final Logger LOGGER = LoggerFactory
@@ -92,23 +93,47 @@ public class MainActivity extends ActionBarActivity implements
 	private Intent commandIntent;
 	private RaspiQuery raspiQuery;
 
+	@XmlView
 	private TextView coreTempText;
+	@XmlView
 	private TextView armFreqText;
+	@XmlView
 	private TextView coreFreqText;
+	@XmlView
 	private TextView coreVoltText;
+	@XmlView
 	private TextView lastUpdateText;
+
+	@XmlView(id = R.id.startedText)
 	private TextView uptimeText;
+
+	@XmlView(id = R.id.loadText)
 	private TextView averageLoadText;
+
+	@XmlView(id = R.id.totalMemText)
 	private TextView totalMemoryText;
+
+	@XmlView(id = R.id.freeMemText)
 	private TextView freeMemoryText;
+
+	@XmlView(id = R.id.cpuSerialText)
 	private TextView serialNoText;
+
+	@XmlView
 	private TextView distriText;
+	@XmlView
 	private TextView firmwareText;
+	@XmlView
 	private TableLayout diskTable;
+	@XmlView
 	private TableLayout processTable;
+	@XmlView
 	private TableLayout networkTable;
 	//private ProgressBar progressBar;
+	@XmlView
 	private Button commandButton;
+
+	@XmlView(id = R.id.swipeRefreshLayout)
 	private SwipeRefreshLayout swipeRefreshLayout;
 
 	private SharedPreferences sharedPrefs;
@@ -152,11 +177,11 @@ public class MainActivity extends ActionBarActivity implements
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		// LOGGER.debug("onCreate()....");
+		LOGGER.debug("onCreate()....");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		//Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		//Toolbar toolbar = (Toolbar) findViewById(R.layoutId.toolbar);
 		//setSupportActionBar(toolbar);
 
 		// assigning Shared Preferences
@@ -170,11 +195,11 @@ public class MainActivity extends ActionBarActivity implements
 				CustomCommandActivity.class);
 
 		// assigning progressbar and command button
-		commandButton = (Button) findViewById(R.id.commandButton);
-		//progressBar = (ProgressBar) findViewById(R.id.progressBar);
+		//commandButton = (Button) findViewById(R.id.commandButton);
+		//progressBar = (ProgressBar) findViewById(R.layoutId.progressBar);
 
 		// assigning textviews to fields
-		armFreqText = (TextView) findViewById(R.id.armFreqText);
+		/*armFreqText = (TextView) findViewById(R.id.armFreqText);
 		coreFreqText = (TextView) findViewById(R.id.coreFreqText);
 		coreVoltText = (TextView) findViewById(R.id.coreVoltText);
 		coreTempText = (TextView) findViewById(R.id.coreTempText);
@@ -191,8 +216,15 @@ public class MainActivity extends ActionBarActivity implements
 		networkTable = (TableLayout) findViewById(R.id.networkTable);
 
 		// assigning refreshable root scrollview
-		swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
-		swipeRefreshLayout.setOnRefreshListener(this);
+		//swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.layoutId.swipeRefreshLayout);
+*/
+		swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+			@Override
+			public void onRefresh() {
+				LOGGER.trace("Query initiated by PullToRefresh.");
+				doQuery(true);
+			}
+		});
 
 		boolean isDebugLogging = sharedPrefs.getBoolean(
 				SettingsActivity.KEY_PREF_DEBUG_LOGGING, false);
@@ -316,7 +348,7 @@ public class MainActivity extends ActionBarActivity implements
 	 *            the messages
 	 */
 	private void handleQueryError(List<String> errorMessages) {
-		final ArrayList<String> messages = new ArrayList<String>(errorMessages);
+		final ArrayList<String> messages = new ArrayList<>(errorMessages);
 		if (errorMessages.size() > 0 && !isOnBackground) {
 			LOGGER.debug("Showing query error messages.");
 			Bundle args = new Bundle();
@@ -632,7 +664,7 @@ public class MainActivity extends ActionBarActivity implements
 			} else if (currentDevice.getAuthMethod().equals(
 					NewRaspiAuthActivity.SPINNER_AUTH_METHODS[1])) {
 				// keyfile
-				final String keyfilePath = currentDevice.getKeyfilePath();
+				final String keyfilePath = currentDevice.getKeyFileContent();
 				if (keyfilePath != null) {
 					final File privateKey = new File(keyfilePath);
 					if (privateKey.exists()) {
@@ -650,14 +682,14 @@ public class MainActivity extends ActionBarActivity implements
 			} else if (currentDevice.getAuthMethod().equals(
 					NewRaspiAuthActivity.SPINNER_AUTH_METHODS[2])) {
 				// keyfile and passphrase
-				final String keyfilePath = currentDevice.getKeyfilePath();
+				final String keyfilePath = currentDevice.getKeyFileContent();
 				if (keyfilePath != null) {
 					final File privateKey = new File(keyfilePath);
 					if (privateKey.exists()) {
 						if (!Strings.isNullOrEmpty(currentDevice
-								.getKeyfilePass())) {
+								.getKeyFilePass())) {
 							final String passphrase = currentDevice
-									.getKeyfilePass();
+									.getKeyFilePass();
 							new SSHShutdownTask().execute(host, user, null,
 									port, sudoPass, type, keyfilePath,
 									passphrase);
@@ -737,7 +769,7 @@ public class MainActivity extends ActionBarActivity implements
 			} else if (authMethod
 					.equals(NewRaspiAuthActivity.SPINNER_AUTH_METHODS[1])) {
 				// keyfile must be present
-				final String keyfilePath = currentDevice.getKeyfilePath();
+				final String keyfilePath = currentDevice.getKeyFileContent();
 				if (keyfilePath != null) {
 					final File privateKey = new File(keyfilePath);
 					if (privateKey.exists()) {
@@ -755,13 +787,13 @@ public class MainActivity extends ActionBarActivity implements
 			} else if (authMethod
 					.equals(NewRaspiAuthActivity.SPINNER_AUTH_METHODS[2])) {
 				// keyfile and keypass must be present
-				final String keyfilePath = currentDevice.getKeyfilePath();
+				final String keyfilePath = currentDevice.getKeyFileContent();
 				if (keyfilePath != null) {
 					final File privateKey = new File(keyfilePath);
 					if (privateKey.exists()) {
 						keyPath = keyfilePath;
 						final String keyfilePass = currentDevice
-								.getKeyfilePass();
+								.getKeyFilePass();
 						if (keyfilePass != null) {
 							canConnect = true;
 							keyPass = keyfilePass;
@@ -939,6 +971,7 @@ public class MainActivity extends ActionBarActivity implements
 					LOGGER.error(error);
 				}
 			} catch (RaspiQueryException e) {
+				e.printStackTrace();
 				LOGGER.error(e.getMessage(), e);
 				bean.setException(e);
 			}
@@ -967,12 +1000,12 @@ public class MainActivity extends ActionBarActivity implements
 
 	@Override
 	public boolean onNavigationItemSelected(final int itemPosition, long itemId) {
-		LOGGER.debug("Spinner item selected: pos=" + itemPosition + ", id="
+		LOGGER.debug("Spinner item selected: pos=" + itemPosition + ", layoutId="
 				+ itemId);
 		new AsyncTask<Long, Void, RaspberryDeviceBean>() {
 			@Override
 			protected RaspberryDeviceBean doInBackground(Long... params) {
-				// get device with id
+				// get device with layoutId
 				return deviceDb.read(params[0]);
 			}
 			
@@ -984,7 +1017,7 @@ public class MainActivity extends ActionBarActivity implements
 					// set current device only when device has changed (query data get
 					// lost otherwise)
 					if (read.getId() != currentDevice.getId()) {
-						LOGGER.debug("Switch from device id {} to device id {}.",
+						LOGGER.debug("Switch from device layoutId {} to device layoutId {}.",
 								currentDevice.getId(), read.getId());
 						currentDevice = read;
 						// switched to other device
@@ -1032,12 +1065,6 @@ public class MainActivity extends ActionBarActivity implements
 			}
 		}.execute(itemId);
 		return true;
-	}
-
-	@Override
-	public void onRefresh() {
-		LOGGER.trace("Query initiated by PullToRefresh.");
-		this.doQuery(true);
 	}
 
 	@Override
@@ -1108,7 +1135,7 @@ public class MainActivity extends ActionBarActivity implements
 			// save passphrase in db
 			LOGGER.debug("Saving passphrase for device {}.",
 					currentDevice.getName());
-			currentDevice.setKeyfilePass(passphrase);
+			currentDevice.setKeyFilePass(passphrase);
 			new Thread() {
 				@Override
 				public void run() {
@@ -1123,17 +1150,17 @@ public class MainActivity extends ActionBarActivity implements
 			new SSHQueryTask().execute(currentDevice.getHost(),
 					currentDevice.getUser(), null,
 					currentDevice.getPort() + "", hideRoot.toString(),
-					currentDevice.getKeyfilePath(), passphrase);
+					currentDevice.getKeyFileContent(), passphrase);
 		} else if (type.equals(PassphraseDialog.SSH_SHUTDOWN)) {
 			new SSHShutdownTask().execute(currentDevice.getHost(),
 					currentDevice.getUser(), null,
 					currentDevice.getPort() + "", currentDevice.getSudoPass(),
-					TYPE_REBOOT, currentDevice.getKeyfilePath(), passphrase);
+					TYPE_REBOOT, currentDevice.getKeyFileContent(), passphrase);
 		} else if (type.equals(PassphraseDialog.SSH_HALT)) {
 			new SSHShutdownTask().execute(currentDevice.getHost(),
 					currentDevice.getUser(), null,
 					currentDevice.getPort() + "", currentDevice.getSudoPass(),
-					TYPE_HALT, currentDevice.getKeyfilePath(), passphrase);
+					TYPE_HALT, currentDevice.getKeyFileContent(), passphrase);
 		}
 	}
 

@@ -112,7 +112,7 @@ public class RunCommandDialog extends DialogFragment {
 				NewRaspiAuthActivity.SPINNER_AUTH_METHODS[1])) {
 			putLine("Authenticating with private key ...");
 			// keyfile
-			final String keyfilePath = device.getKeyfilePath();
+			final String keyfilePath = device.getKeyFileContent();
 			if (keyfilePath != null) {
 				final File privateKey = new File(keyfilePath);
 				if (privateKey.exists()) {
@@ -128,7 +128,7 @@ public class RunCommandDialog extends DialogFragment {
 				NewRaspiAuthActivity.SPINNER_AUTH_METHODS[2])) {
 			putLine("Authenticating with private key and passphrase ...");
 			// keyfile and passphrase
-			final String keyfilePath = device.getKeyfilePath();
+			final String keyfilePath = device.getKeyFileContent();
 			if (keyfilePath != null) {
 				final File privateKey = new File(keyfilePath);
 				if (privateKey.exists()) {
