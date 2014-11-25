@@ -8,8 +8,8 @@ android {
         applicationId "de.eidottermihi.rpicheck"
         minSdkVersion 9
         targetSdkVersion 21
-        versionCode 1
-        versionName "1.0"
+        versionCode 20
+        versionName "1.6.1"
     }
     buildTypes {
         release {
