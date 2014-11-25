@@ -40,8 +40,12 @@ import de.eidottermihi.rpicheck.fragment.CommandPlaceholdersDialog.PlaceholdersD
 import de.eidottermihi.rpicheck.fragment.PassphraseDialog;
 import de.eidottermihi.rpicheck.fragment.PassphraseDialog.PassphraseDialogListener;
 import de.eidottermihi.rpicheck.fragment.RunCommandDialog;
+import de.larsgrefer.android.library.injection.annotation.XmlLayout;
+import de.larsgrefer.android.library.injection.annotation.XmlView;
+import de.larsgrefer.android.library.ui.InjectionActionBarActivity;
 
-public class CustomCommandActivity extends ActionBarActivity implements
+@XmlLayout(id = R.layout.activity_commands, rClass = R.class)
+public class CustomCommandActivity extends InjectionActionBarActivity implements
 		OnItemClickListener, PassphraseDialogListener,
 		PlaceholdersDialogListener {
 	private static final Logger LOGGER = LoggerFactory
@@ -49,6 +53,7 @@ public class CustomCommandActivity extends ActionBarActivity implements
 
 	private RaspberryDeviceBean currentDevice;
 
+	@XmlView
 	private ListView commandListView;
 
 	private DeviceDbHelper deviceDb = new DeviceDbHelper(this);
@@ -61,8 +66,6 @@ public class CustomCommandActivity extends ActionBarActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_commands);
-		this.commandListView = (ListView) findViewById(R.id.commandListView);
 
 		// Show the Up button in the action bar.
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);

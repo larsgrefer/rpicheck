@@ -33,30 +33,59 @@ import de.eidottermihi.rpicheck.activity.helper.KeyFileHelper;
 import de.eidottermihi.rpicheck.activity.helper.Validation;
 import de.eidottermihi.rpicheck.db.DeviceDbHelper;
 import de.eidottermihi.rpicheck.db.RaspberryDeviceBean;
+import de.larsgrefer.android.library.injection.annotation.XmlLayout;
+import de.larsgrefer.android.library.injection.annotation.XmlView;
+import de.larsgrefer.android.library.ui.InjectionActionBarActivity;
 
-public class EditRaspiActivity extends ActionBarActivity implements
-		OnItemSelectedListener {
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(EditRaspiActivity.class);
+@XmlLayout(id = R.layout.activity_raspi_edit, rClass = R.class)
+public class EditRaspiActivity extends InjectionActionBarActivity implements OnItemSelectedListener {
+	private static final Logger LOGGER = LoggerFactory.getLogger(EditRaspiActivity.class);
 
 	public static final int REQUEST_EDIT = 10;
 
+	@XmlView(id = R.id.spinnerAuthMethod)
 	private Spinner spinnerAuth;
+
+	@XmlView(id = R.id.rel_pw)
 	private RelativeLayout relLaySshPass;
+
+	@XmlView(id = R.id.editText_ssh_password)
 	private EditText editTextPass;
+
+	@XmlView(id = R.id.rel_key)
 	private RelativeLayout relLayKeyfile;
+
+	@XmlView(id = R.id.buttonKeyfile)
 	private Button buttonKeyfile;
 
+	@XmlView(id = R.id.rel_key_pw)
 	private RelativeLayout relLayKeyPassphrase;
+
+	@XmlView(id = R.id.text_key_pw)
 	private TextView textKeyPass;
+
+	@XmlView(id = R.id.editTextKeyPw)
 	private EditText editTextKeyfilePass;
+
+	@XmlView(id = R.id.checkboxAsk)
 	private CheckBox checkboxAskPassphrase;
 
+	@XmlView(id = R.id.edit_raspi_name_editText)
 	private EditText editTextName;
+
+	@XmlView(id = R.id.edit_raspi_host_editText)
 	private EditText editTextHost;
+
+	@XmlView(id = R.id.edit_raspi_user_editText)
 	private EditText editTextUser;
+
+	@XmlView(id = R.id.edit_raspi_ssh_port_editText)
 	private EditText editTextSshPortOpt;
+
+	@XmlView(id = R.id.edit_raspi_desc_editText)
 	private EditText editTextDescription;
+
+	@XmlView(id = R.id.edit_raspi_sudoPass_editText)
 	private EditText editTextSudoPass;
 
 	private DeviceDbHelper deviceDb;
@@ -72,6 +101,7 @@ public class EditRaspiActivity extends ActionBarActivity implements
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 		// assigning view elements to fields
+		/*
 		editTextName = (EditText) findViewById(R.id.edit_raspi_name_editText);
 		editTextHost = (EditText) findViewById(R.id.edit_raspi_host_editText);
 		editTextUser = (EditText) findViewById(R.id.edit_raspi_user_editText);
@@ -79,7 +109,9 @@ public class EditRaspiActivity extends ActionBarActivity implements
 		editTextSshPortOpt = (EditText) findViewById(R.id.edit_raspi_ssh_port_editText);
 		editTextDescription = (EditText) findViewById(R.id.edit_raspi_desc_editText);
 		editTextSudoPass = (EditText) findViewById(R.id.edit_raspi_sudoPass_editText);
+		*/
 
+		/*
 		spinnerAuth = (Spinner) findViewById(R.id.spinnerAuthMethod);
 		relLaySshPass = (RelativeLayout) findViewById(R.id.rel_pw);
 		relLayKeyfile = (RelativeLayout) findViewById(R.id.rel_key);
@@ -88,6 +120,7 @@ public class EditRaspiActivity extends ActionBarActivity implements
 		buttonKeyfile = (Button) findViewById(R.id.buttonKeyfile);
 		textKeyPass = (TextView) findViewById(R.id.text_key_pw);
 		checkboxAskPassphrase = (CheckBox) findViewById(R.id.checkboxAsk);
+		*/
 
 		// init sql db
 		deviceDb = new DeviceDbHelper(this);
@@ -296,14 +329,12 @@ public class EditRaspiActivity extends ActionBarActivity implements
 			// show key file button (no passphrase)
 			relLaySshPass.setVisibility(View.GONE);
 			relLayKeyfile.setVisibility(View.VISIBLE);
-			initButtonKeyfile();
 			checkboxAskPassphrase.setVisibility(View.GONE);
 			relLayKeyPassphrase.setVisibility(View.GONE);
 		} else {
 			// show key file button and passphrase field
 			relLaySshPass.setVisibility(View.GONE);
 			relLayKeyfile.setVisibility(View.VISIBLE);
-			initButtonKeyfile();
 			checkboxAskPassphrase.setVisibility(View.VISIBLE);
 			if (deviceBean.getKeyFilePass() != null) {
 				relLayKeyPassphrase.setVisibility(View.VISIBLE);
@@ -317,13 +348,6 @@ public class EditRaspiActivity extends ActionBarActivity implements
 				relLayKeyPassphrase.setVisibility(View.GONE);
 				checkboxAskPassphrase.setChecked(true);
 			}
-		}
-	}
-
-	private void initButtonKeyfile() {
-		if (deviceBean.getKeyFileContent() != null) {
-			buttonKeyfile.setText(NewRaspiAuthActivity
-					.getFilenameFromPath(deviceBean.getKeyFileContent()));
 		}
 	}
 
@@ -348,20 +372,11 @@ public class EditRaspiActivity extends ActionBarActivity implements
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == Activity.RESULT_OK) {
 			if (requestCode == KeyFileHelper.REQUEST_OPEN_KEY_FILE) {
-				/*
-				final String filePath = data
-						.getStringExtra(FileDialog.RESULT_PATH);
-				LOGGER.debug("Path of selected keyfile: {}", filePath);
-				deviceBean.setKeyFileContent(filePath);
-				// set text to filename, not full path
-				String fileName = NewRaspiAuthActivity
-						.getFilenameFromPath(filePath);
-				buttonKeyfile.setText(fileName);
-				*/
+				String keyFileContent = KeyFileHelper.getKeyFileContentFromActivityResult(this, requestCode, resultCode, data);
+				deviceBean.setKeyFileContent(keyFileContent);
 			}
 		} else if (resultCode == Activity.RESULT_CANCELED) {
 			LOGGER.warn("No file selected...");
 		}
 	}
-
 }

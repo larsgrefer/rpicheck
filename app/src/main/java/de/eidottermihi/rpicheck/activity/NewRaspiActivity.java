@@ -14,19 +14,30 @@ import android.widget.EditText;
 
 import de.eidottermihi.rpicheck.R;
 import de.eidottermihi.rpicheck.activity.helper.Validation;
+import de.larsgrefer.android.library.injection.annotation.XmlLayout;
+import de.larsgrefer.android.library.injection.annotation.XmlView;
+import de.larsgrefer.android.library.ui.InjectionActionBarActivity;
 
-public class NewRaspiActivity extends ActionBarActivity {
+@XmlLayout(id = R.layout.activity_raspi_new, rClass = R.class)
+public class NewRaspiActivity extends InjectionActionBarActivity {
 	public static final String PI_HOST = "PI_HOST";
 	public static final String PI_NAME = "PI_NAME";
 	public static final String PI_USER = "PI_USER";
 	public static final String PI_DESC = "PI_DESC";
 	public static final String PI_BUNDLE = "PI_BUNDLE";
 	public static final int REQUEST_SAVE = 0;
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(NewRaspiActivity.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(NewRaspiActivity.class);
+
+	@XmlView(id = R.id.edit_raspi_name_editText)
 	private EditText editTextName;
+
+	@XmlView(id = R.id.edit_raspi_host_editText)
 	private EditText editTextHost;
+
+	@XmlView(id = R.id.edit_raspi_user_editText)
 	private EditText editTextUser;
+
+	@XmlView(id = R.id.edit_raspi_desc_editText)
 	private EditText editTextDescription;
 
 	private Validation validator = new Validation();
@@ -34,15 +45,16 @@ public class NewRaspiActivity extends ActionBarActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_raspi_new);
 		// Show the Up button in the action bar.
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 		// assigning view elements to fields
+		/*
 		editTextName = (EditText) findViewById(R.id.edit_raspi_name_editText);
 		editTextHost = (EditText) findViewById(R.id.edit_raspi_host_editText);
 		editTextUser = (EditText) findViewById(R.id.edit_raspi_user_editText);
 		editTextDescription = (EditText) findViewById(R.id.edit_raspi_desc_editText);
+		*/
 		// Show information text
 		final View text = findViewById(R.id.new_raspi_text);
 		text.setVisibility(View.VISIBLE);

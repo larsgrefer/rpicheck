@@ -228,7 +228,7 @@ public class MainActivity extends InjectionActionBarActivity implements ActionBa
 		TypedValue accentColor = new TypedValue();
 		TypedValue primaryColor = new TypedValue();
 		if (getTheme().resolveAttribute(R.attr.colorAccent, accentColor, true) &&
-					getTheme().resolveAttribute(R.attr.colorPrimary, primaryColor, true)) {
+			getTheme().resolveAttribute(R.attr.colorPrimary, primaryColor, true)) {
 			swipeRefreshLayout.setColorSchemeResources(accentColor.resourceId, primaryColor.resourceId);
 		}
 	}

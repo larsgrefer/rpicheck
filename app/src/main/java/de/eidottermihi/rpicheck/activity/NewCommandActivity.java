@@ -17,8 +17,12 @@ import de.eidottermihi.rpicheck.R;
 import de.eidottermihi.rpicheck.activity.helper.Validation;
 import de.eidottermihi.rpicheck.db.CommandBean;
 import de.eidottermihi.rpicheck.db.DeviceDbHelper;
+import de.larsgrefer.android.library.injection.annotation.XmlLayout;
+import de.larsgrefer.android.library.injection.annotation.XmlView;
+import de.larsgrefer.android.library.ui.InjectionActionBarActivity;
 
-public class NewCommandActivity extends ActionBarActivity {
+@XmlLayout(id = R.layout.activity_command_new, rClass = R.class)
+public class NewCommandActivity extends InjectionActionBarActivity {
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(NewCommandActivity.class);
 
@@ -29,7 +33,10 @@ public class NewCommandActivity extends ActionBarActivity {
 	// Key for CommandBean when edit is requested
 	public static final String CMD_KEY_EDIT = "cmdId";
 
+	@XmlView(id = R.id.new_cmd_name_editText)
 	EditText nameEditText;
+
+	@XmlView(id = R.id.new_cmd_command_editText)
 	EditText commandEditText;
 
 	DeviceDbHelper db;
@@ -41,15 +48,16 @@ public class NewCommandActivity extends ActionBarActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_command_new);
 		// Show the Up button in the action bar.
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		getSupportActionBar().setDisplayShowTitleEnabled(true);
 
 		db = new DeviceDbHelper(this);
 
+		/*
 		nameEditText = (EditText) findViewById(R.id.new_cmd_name_editText);
 		commandEditText = (EditText) findViewById(R.id.new_cmd_command_editText);
+		*/
 
 		if (getIntent().getExtras() != null
 				&& getIntent().getExtras().getLong(CMD_KEY_EDIT, -1L) != -1) {

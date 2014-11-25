@@ -31,33 +31,56 @@ import de.eidottermihi.rpicheck.R;
 import de.eidottermihi.rpicheck.activity.helper.KeyFileHelper;
 import de.eidottermihi.rpicheck.activity.helper.Validation;
 import de.eidottermihi.rpicheck.db.DeviceDbHelper;
+import de.larsgrefer.android.library.injection.annotation.XmlLayout;
+import de.larsgrefer.android.library.injection.annotation.XmlView;
+import de.larsgrefer.android.library.ui.InjectionActionBarActivity;
 
-public class NewRaspiAuthActivity extends ActionBarActivity implements
+@XmlLayout(id = R.layout.activity_raspi_new_auth, rClass = R.class)
+public class NewRaspiAuthActivity extends InjectionActionBarActivity implements
 		OnItemSelectedListener {
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(NewRaspiAuthActivity.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(NewRaspiAuthActivity.class);
 
-	public static final String[] SPINNER_AUTH_METHODS = { "password", "keys",
-			"keysWithPassword" };
+	public static final String[] SPINNER_AUTH_METHODS = { "password", "keys", "keysWithPassword" };
 
 	public static final int REQUEST_LOAD = 0;
 
 	private Validation validator = new Validation();
 
+	@XmlView(id = R.id.spinnerAuthMethod)
 	private Spinner spinnerAuth;
 
 	private DeviceDbHelper deviceDb;
 
+	@XmlView(id = R.id.rel_pw)
 	private RelativeLayout relLaySshPass;
+
+	@XmlView(id = R.id.rel_key)
 	private RelativeLayout relLayKeyfile;
+
+	@XmlView(id = R.id.rel_key_pw)
 	private RelativeLayout relLayKeyPassphrase;
+
+	@XmlView(id = R.id.editText_ssh_password)
 	private EditText editTextSshPass;
+
+	@XmlView(id = R.id.editTextKeyPw)
 	private EditText editTextKeyfilePass;
+
+	@XmlView(id = R.id.buttonKeyfile)
 	private Button buttonKeyfile;
+
+	@XmlView(id = R.id.text_key_pw)
 	private TextView textKeyPass;
+
+	@XmlView(id = R.id.edit_raspi_ssh_port_editText)
 	private EditText editTextSshPort;
+
+	@XmlView(id = R.id.edit_raspi_sudoPass_editText)
 	private EditText editTextSudoPw;
+
+	@XmlView(id = R.id.checkboxAsk)
 	private CheckBox checkboxAskPassphrase;
+
 
 	private String keyFileContent;
 
@@ -69,22 +92,9 @@ public class NewRaspiAuthActivity extends ActionBarActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_raspi_new_auth);
 		// Show the Up button in the action bar.
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-		// assigning view elements to fields
-		spinnerAuth = (Spinner) findViewById(R.id.spinnerAuthMethod);
-		relLaySshPass = (RelativeLayout) findViewById(R.id.rel_pw);
-		relLayKeyfile = (RelativeLayout) findViewById(R.id.rel_key);
-		relLayKeyPassphrase = (RelativeLayout) findViewById(R.id.rel_key_pw);
-		editTextSshPass = (EditText) findViewById(R.id.editText_ssh_password);
-		editTextKeyfilePass = (EditText) findViewById(R.id.editTextKeyPw);
-		buttonKeyfile = (Button) findViewById(R.id.buttonKeyfile);
-		textKeyPass = (TextView) findViewById(R.id.text_key_pw);
-		editTextSshPort = (EditText) findViewById(R.id.edit_raspi_ssh_port_editText);
-		editTextSudoPw = (EditText) findViewById(R.id.edit_raspi_sudoPass_editText);
-		checkboxAskPassphrase = (CheckBox) findViewById(R.id.checkboxAsk);
 		// show default option for auth method = ssh password
 		this.switchAuthMethodsInView(SPINNER_AUTH_METHODS[0]);
 		// init auth spinner
@@ -309,10 +319,4 @@ public class NewRaspiAuthActivity extends ActionBarActivity implements
 			Log.d(this.getLocalClassName(), "RESULT_CANCELED");
 		}
 	}
-
-	public static String getFilenameFromPath(String filePath) {
-		final File f = new File(filePath);
-		return f.getName();
-	}
-
 }
