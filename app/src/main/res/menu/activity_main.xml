@@ -4,14 +4,14 @@
     <item
         android:id="@+id/menu_edit_raspi"
         android:icon="?attr/ic_action_edit"
-        app:showAsAction="always|withText"
+        app:showAsAction="ifRoom|withText"
         android:title="@string/action_edit_raspi"
         android:titleCondensed="@string/action_edit"
         android:visible="false"/>
     <item
         android:id="@+id/menu_reboot"
         android:icon="?attr/ic_action_restart"
-        app:showAsAction="always|withText"
+        app:showAsAction="ifRoom|withText"
         android:title="@string/action_shutdown"
         android:visible="false"/>
     <item
