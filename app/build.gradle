@@ -2,18 +2,18 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 21
-    buildToolsVersion "21.1.0"
+    buildToolsVersion '21.1.1'
 
     defaultConfig {
         applicationId "de.eidottermihi.rpicheck"
-        minSdkVersion 9
+        minSdkVersion 7
         targetSdkVersion 21
         versionCode 20
         versionName "1.6.1"
     }
     buildTypes {
         release {
-            runProguard false
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -25,8 +25,10 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile project(':android-library')
     compile 'com.android.support:appcompat-v7:21.+'
-    compile 'com.google.guava:guava:16.+'
+    compile 'com.google.guava:guava:18.+'
+    compile 'com.madgag:scprov-jdk15on:1.47.0.3'
+    compile 'org.ocpsoft.prettytime:prettytime:3.2.5.Final'
     compile 'net.schmizz:sshj:0.9.+'
+    compile 'de.larsgrefer:android-library:0.1'
 }

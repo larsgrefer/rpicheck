@@ -1,3 +1,0 @@
-[submodule "android-library"]
-	path = android-library
-	url = git@github.com:larsgrefer/android-library.git

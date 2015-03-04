@@ -192,7 +192,7 @@ public class MainActivity extends InjectionActionBarActivity implements ActionBa
 		// Changelog
 		final ChangeLog cl = new ChangeLog(this);
 		if (cl.firstRun()) {
-			cl.getLogDialog().show();
+				//cl.getLogDialog().show();
 		}
 
 		// init device database

@@ -22,7 +22,7 @@ import de.eidottermihi.rpicheck.R;
 public class KeyFileHelper {
 
 	//Random Numbers to avoid conflicts
-	public static final int REQUEST_OPEN_KEY_FILE = 34624809;
+	public static final int REQUEST_OPEN_KEY_FILE = 3409;
 
 
 	public static Intent getOpenKeyFileIntent() {
