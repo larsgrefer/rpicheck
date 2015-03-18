@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Datei Dialog</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="cant_read_folder">Ordner kann nicht gelesen werden</string>
+    <string name="create">Speichern</string>
+    <string name="err">Fehler</string>
+    <string name="file_name">Dateiname:</string>
+    <string name="intent_label">Datei auswählen</string>
+    <string name="location">Ort</string>
+    <string name="nnew">Neu</string>
+    <string name="no_data">Keine Daten</string>
+    <string name="select">Auswählen</string>
+</resources>
